@@ -1,12 +1,14 @@
 const tasks = document.querySelector("#tasks");
-const taskList = [];
+let taskList = [];
 
-function loadTasks(taskList){
-    let index = 0;
-    taskList.forEach(task=>{
-        tasks.appendChild(generateTask(task, index));
-        index++;
-    });
+function loadTasks(taskList) {
+  tasks.innerHTML = "";
+
+  let index = 0;
+  taskList.forEach((task) => {
+    tasks.appendChild(generateTask(task, index));
+    index++;
+  });
 }
 
 function generateTask(taskDesc, id) {
@@ -23,35 +25,51 @@ function generateTask(taskDesc, id) {
   taskContainer.appendChild(taskDescription);
   taskContainer.appendChild(deleteTaskButton);
 
+  attachDeleteFunction(deleteTaskButton);
+
   return taskContainer;
 }
 
+// Add test data
 taskList.push("Clear aircon filter");
 taskList.push("Clear electric fans (1st floor and 2nd floor");
 taskList.push("Prepare furbabies' foods");
 
+// Load program
 loadTasks(taskList);
 
 const deleteButtons = tasks.querySelectorAll(".task > img");
 
+function attachDeleteFunction(currElement) {
+  currElement.addEventListener("click", () => {
+    const task = currElement.parentElement;
+    const taskId = task.getAttribute("id");
 
-deleteButtons.forEach(job => {
-    job.addEventListener("click", ()=>{
-        const task = job.parentElement;
-        const taskId = task.getAttribute("id");
-
-        deleteTaskFromList(taskId);
-        removeTaskFromDOM(job);
-    });
-});
-
-function deleteTaskFromList(index)
-{
-    const deletedTask = taskList.splice(index, 1);
+    deleteTaskFromList(taskId);
+    removeTaskFromDOM(currElement);
+  });
 }
 
-function removeTaskFromDOM(taskElement){
-    const task = taskElement.parentElement;
-    const taskContainer = task.parentElement
-    taskContainer.removeChild(task);
+function deleteTaskFromList(index) {
+  const deletedTask = taskList.splice(index, 1);
 }
+
+function removeTaskFromDOM(taskElement) {
+  const task = taskElement.parentElement;
+  const taskContainer = task.parentElement;
+  taskContainer.removeChild(task);
+}
+
+function addTaskToList() {
+  const newTask = document.querySelector("#newtask input[type=text]");
+  if (!newTask.value) {
+    return;
+  }
+  taskList.push(newTask.value);
+  newTask.value = "";
+
+  loadTasks(taskList);
+}
+
+const addButton = document.querySelector("#newtask button");
+addButton.addEventListener("click", addTaskToList);
