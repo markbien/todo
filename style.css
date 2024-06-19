@@ -14,7 +14,7 @@ body {
 
 .container {
   border: 2px solid white;
-  width: 40%;
+  width: 60%;
   position: absolute;
   transform: translate(-50%, -50%);
   top: 50%;
@@ -112,4 +112,16 @@ body {
 
 .task img:hover {
     transform: scale(1.05);
+}
+
+@media (max-width: 400px) {
+    .container {
+        width: 90%;
+    }
+}
+
+@media (min-width: 400px) and (max-width: 1080px) {
+    .container {
+        width: 80%;
+    }
 }
