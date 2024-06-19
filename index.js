@@ -51,7 +51,8 @@ function attachDeleteFunction(currElement) {
 }
 
 function deleteTaskFromList(index) {
-  const deletedTask = taskList.splice(index, 1);
+  if (taskList.length === 1) taskList.pop();
+  else taskList.splice(index, 1);
 }
 
 function removeTaskFromDOM(taskElement) {
