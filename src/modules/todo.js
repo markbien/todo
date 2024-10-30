@@ -8,6 +8,10 @@ export default function todo(id, title, description, dueDate){
   const setDescription = newDesc => description = newDesc;
   const setDueDate = newDueDate => dueDate = newDueDate;
 
+  const printDetails = ()=> {
+    console.log(`ID: ${getId()}\nTitle: ${getTitle()}\nDescription: ${getDescription()}\nDue Date: ${getDueDate()}`);
+  }
+
   return {
     getId,
     getTitle,
@@ -15,6 +19,7 @@ export default function todo(id, title, description, dueDate){
     getDueDate,
     setTitle,
     setDescription,
-    setDueDate
+    setDueDate,
+    printDetails
   }
 }
