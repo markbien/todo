@@ -18,6 +18,9 @@ export default function project(id, name){
       todo.printDetails();
     });
   };
+  const printDetails = ()=> {
+    console.log(`ID: ${getId()}\nName: ${getName()}`);
+  };
 
   return {
     getId,
@@ -26,6 +29,7 @@ export default function project(id, name){
     addATodo,
     getTodoIndex,
     removeATodo,
-    printTodos
+    printTodos,
+    printDetails
   }
 }
