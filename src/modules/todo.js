@@ -1,4 +1,5 @@
-export default function todo(title, description, dueDate){
+export default function todo(id, title, description, dueDate){
+  const getId = ()=> id;
   const getTitle = ()=> title;
   const getDescription = ()=> description;
   const getDueDate = ()=> dueDate;
@@ -8,6 +9,7 @@ export default function todo(title, description, dueDate){
   const setDueDate = newDueDate => dueDate = newDueDate;
 
   return {
+    getId,
     getTitle,
     getDescription,
     getDueDate,
