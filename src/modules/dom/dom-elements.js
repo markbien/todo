@@ -42,7 +42,6 @@ export const createInputRadio = (inputName, inputId) => {
   input.setAttribute('type', 'radio');
   input.setAttribute('name', inputName);
   input.setAttribute('id', inputId);
-  console.log(checked);
 
   return input;
 };
