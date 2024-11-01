@@ -1,17 +1,17 @@
-const createDiv = (newClass) => {
+export const createDiv = (newClass) => {
   const div = document.createElement('div');
   div.classList.add(newClass);
   return div;
 }
 
-const createLabel = (labelFor, labelText) => {
+export const createLabel = (labelFor, labelText) => {
   const label = document.createElement('label');
   label.setAttribute('for', labelFor);
   label.textContent = labelText;
   return label;
 };
 
-const createInputText = (inputId, placeholder) => {
+export const createInputText = (inputId, placeholder) => {
   const input = document.createElement('input');
   input.setAttribute('type', 'text');
   input.setAttribute('id', inputId);;
@@ -20,7 +20,7 @@ const createInputText = (inputId, placeholder) => {
   return input;
 };
 
-const createTextArea = () => {
+export const createTextArea = () => {
   const textarea = document.createElement('textarea');
   textarea.setAttribute('id', 'description');
   textarea.setAttribute('placeholder', 'Enter a new description...');
@@ -29,7 +29,7 @@ const createTextArea = () => {
   return textarea;
 };
 
-const createInputDate = (inputId) => {
+export const createInputDate = (inputId) => {
   const input = document.createElement('input');
   input.setAttribute('type', 'date');
   input.setAttribute('id', inputId);
@@ -37,16 +37,17 @@ const createInputDate = (inputId) => {
   return input;
 };
 
-const createInputRadio = (inputName, inputId) => {
+export const createInputRadio = (inputName, inputId) => {
   const input = document.createElement('input');
   input.setAttribute('type', 'radio');
   input.setAttribute('name', inputName);
   input.setAttribute('id', inputId);
+  console.log(checked);
 
   return input;
 };
 
-const createInputSubmit = (inputId, value) => {
+export const createInputSubmit = (inputId, value) => {
   const input = document.createElement('input');
   input.setAttribute('id', inputId);
   input.setAttribute('type', 'submit');
