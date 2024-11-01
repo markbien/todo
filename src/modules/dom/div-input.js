@@ -61,13 +61,11 @@ export function createAddDetails(){
   const divTitle = createDivInputText('title', 'Title', 'title', 'Enter a new title...');
   const divDescription = createDivTextArea();
   const divDueDate = createDivInputDate('due-date', 'Due Date', 'due-date');
-  const divStatus = createDivInputRadio();
   const inputSubmit = createInputSubmit('add-todo-btn', 'Add new todo');
 
   form.appendChild(divTitle);
   form.appendChild(divDescription);
   form.appendChild(divDueDate);
-  form.appendChild(divStatus);
   form.appendChild(inputSubmit);
 
   divAddDetails.appendChild(form);
