@@ -1,6 +1,6 @@
 export const createDiv = (newClass) => {
   const div = document.createElement('div');
-  div.classList.add(newClass);
+  if (newClass !== undefined) div.classList.add(newClass);
   return div;
 }
 
