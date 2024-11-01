@@ -72,3 +72,28 @@ export function createAddDetails(){
 
   return divAddDetails;
 }
+
+export function createAddProject(){
+  const li = document.createElement('li');
+  li.classList.add('add-project');
+  
+  const inputProjectName = document.createElement('input');
+  inputProjectName.setAttribute('type', 'text');
+  inputProjectName.setAttribute('id', 'project-name');
+  inputProjectName.setAttribute('placeholder', 'Enter project name...');
+
+  const optionsDiv = createDiv('options');
+  const saveBtn = document.createElement('img');
+  saveBtn.setAttribute('id', 'save-new-project');
+  saveBtn.src = '../../images/check.png';
+  const deleteBtn = document.createElement('img');
+  deleteBtn.setAttribute('id', 'delete-new-project');
+  deleteBtn.src = '../../images/remove.png';
+  optionsDiv.appendChild(saveBtn);
+  optionsDiv.appendChild(deleteBtn);
+
+  li.appendChild(inputProjectName);
+  li.appendChild(optionsDiv);
+
+  return li;
+}
