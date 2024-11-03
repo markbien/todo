@@ -95,5 +95,8 @@ export function createCard(newId, newTitle, newDescription, newDueDate){
   card.appendChild(leftDiv);
   card.appendChild(rightDiv);
 
+  const cardContainer = document.querySelector('.card-container');
+  cardContainer.appendChild(card);
+
   return card;
 }
