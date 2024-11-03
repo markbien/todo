@@ -1,5 +1,14 @@
 import { createDiv } from "./dom-elements"
 
+export default function createMainDiv(month, day, time){
+  const mainDiv = createDiv('main');
+
+  mainDiv.appendChild(createGreetings(month, day, time));
+  mainDiv.appendChild(createMainContainer());
+
+  return mainDiv;
+}
+
 function createGreetings(month, day, time){
   const greetingsDiv = createDiv('greetings');
 
@@ -41,3 +50,19 @@ function createMainGreeting(time){
 
   return mainGreetingDiv;
 }
+
+function createMainContainer(){
+  const mainContainerDiv = createDiv('main-container')
+  
+  const addTodoDiv = createDiv('add-todo')
+  addTodoDiv.textContent = `+ Add Todo`;
+
+  const cardContainerUl = document.createElement('ul');
+  cardContainerUl.classList.add('card-container');
+
+  mainContainerDiv.appendChild(addTodoDiv);
+  mainContainerDiv.appendChild(cardContainerUl);
+
+  return mainContainerDiv;
+}
+
