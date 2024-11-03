@@ -25,6 +25,10 @@ module.exports = {
         test: /\.(png)$/i,
         type: 'asset/resource',
       },
+      {
+        test: /\.(ttf|)$/i,
+        type: 'asset/resource',
+      },
     ],
   },
 };

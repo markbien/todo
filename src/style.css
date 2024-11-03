@@ -6,6 +6,18 @@
   box-sizing: border-box;
 }
 
+@font-face {
+  font-family: 'RobotoRegular';
+  src: url('./fonts/Roboto-Regular.ttf');
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: 'RobotoLight';
+  src: url('./fonts/Roboto-Light.ttf');
+  font-weight: 200;
+}
+
 :root {
   --main-color: black;
   --secondary-color: #181C14;
@@ -17,7 +29,7 @@
 body {
   display: flex;
   min-height: 100vh;
-  font-family: 'Roboto', Verdana, sans-serif;
+  font-family: 'RobotoRegular', Verdana, sans-serif;
 }
 
 ul {
@@ -77,6 +89,7 @@ ul {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  /* font-family: ''; */
 }
 
 .card,
@@ -175,14 +188,14 @@ ul {
 }
 
 .title {
-  font-size: 1.3rem;
+  font-size: 1.5rem;
 }
 
 .description,
 .due-date {
   color: var(--text-fade);
   padding-top: 3px;
-  font-weight: 200;
+  font-family: 'RobotoLight', Verdana, sans-serif;
 }
 
 nav {
