@@ -54,3 +54,18 @@ export const createInputSubmit = (inputId, value) => {
 
   return input;
 };
+
+export const createLi = (className) => {
+  const li = document.createElement('li');
+  li.classList.add(className);
+  
+  return li;
+}
+
+export const createPara = (className, text) => {
+  const p = document.createElement('p');
+  p.classList.add(className);
+  p.textContent = text;
+
+  return p;
+}
