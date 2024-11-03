@@ -54,7 +54,8 @@ function createMainGreeting(time){
 function createMainContainer(){
   const mainContainerDiv = createDiv('main-container')
   
-  const addTodoDiv = createDiv('add-todo')
+  const addTodoDiv = createDiv();
+  addTodoDiv.setAttribute('id', 'add-todo');
   addTodoDiv.textContent = `+ Add Todo`;
 
   const cardContainerUl = document.createElement('ul');
