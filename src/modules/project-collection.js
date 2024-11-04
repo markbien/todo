@@ -14,11 +14,15 @@ export default function projectCollection() {
       project.printDetails();
     });
   }
+  const getProject = index => {
+    return collection[index];
+  }
 
   return {
     addProject,
     findProjectIndex,
     removeProject,
-    printProjectDetails
+    printProjectDetails,
+    getProject,
   }
 };
