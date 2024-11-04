@@ -1,5 +1,8 @@
-import './style.css';
-import initializeWebsiteDom from './modules/dom/landing-page.js';
+import "./style.css";
+import initializeWebsiteDom from "./modules/dom/landing-page.js";
+import { createAddProject } from "./modules/dom/div-input.js";
+import createProjectCollection from "./modules/project-collection.js";
+import project from "./modules/project.js";
 // import todo from './modules/todo.js';
 // import project from './modules/project.js';
 // import projectCollection from './modules/project-collection.js';
@@ -43,7 +46,7 @@ import initializeWebsiteDom from './modules/dom/landing-page.js';
 // collection.printProjectDetails();
 
 // import { createAddProject } from "./modules/dom/div-input";
- 
+
 // const ta = createAddDetails();
 // document.body.appendChild(ta);
 
@@ -52,3 +55,60 @@ import initializeWebsiteDom from './modules/dom/landing-page.js';
 // ul.appendChild(addProject);;
 
 initializeWebsiteDom();
+
+function initializeStorage(){
+  const projectCollection = createProjectCollection();
+  const defaultIndex = projectCollection.findProjectIndex('Default');
+  if (defaultIndex === -1) { // Create "Default" project
+    const defaultProject = project(0, "Default");
+    projectCollection.addProject(defaultProject);
+  }
+
+  
+
+  projectCollection.printProjectDetails();
+
+  return projectCollection;
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  addEventListenerToNewProject();
+  // Load projects here
+  console.log(initializeStorage());
+});
+
+function addEventListenerToNewProject() {
+  const newProjectBtn = document.querySelector("#new-project");
+  const projectContainer = document.querySelector(".project-container > ul");
+
+  newProjectBtn.addEventListener("click", function () {
+    if (document.querySelector(".add-project") !== null) return; // Make sure that add new project window is not duplicated;
+    projectContainer.appendChild(createAddProject());
+
+    attachEventRemoveDiv();
+    attachEventSaveProject();
+  });
+}
+
+function attachEventRemoveDiv() {
+  const removeBtn = document.querySelector("#delete-new-project");
+  removeBtn.addEventListener("click", function () {
+    removeAddProjectDiv();
+  });
+}
+
+function removeAddProjectDiv() {
+  const projectContainer = document.querySelector(".project-container > ul");
+  const addDiv = document.querySelector(".add-project");
+
+  projectContainer.removeChild(addDiv);
+}
+
+function attachEventSaveProject() {
+  const saveBtn = document.querySelector("#save-new-project");
+  saveBtn.addEventListener("click", function () {
+    // Add project here
+
+    removeAddProjectDiv();
+  });
+}
