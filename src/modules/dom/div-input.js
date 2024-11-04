@@ -1,4 +1,6 @@
 import { createDiv, createLabel, createInputText, createTextArea, createInputDate, createInputRadio, createInputSubmit } from './dom-elements';
+import checkIcon from '../../images/check.png';
+import removeIcon from '../../images/remove.png';
 
 function createDivInputText(labelFor, labelText, inputId, placeholder){
   const div = createDiv('div-input');
@@ -85,10 +87,10 @@ export function createAddProject(){
   const optionsDiv = createDiv('options');
   const saveBtn = document.createElement('img');
   saveBtn.setAttribute('id', 'save-new-project');
-  saveBtn.src = '../../images/check.png';
+  saveBtn.src = checkIcon;
   const deleteBtn = document.createElement('img');
   deleteBtn.setAttribute('id', 'delete-new-project');
-  deleteBtn.src = '../../images/remove.png';
+  deleteBtn.src = removeIcon;
   optionsDiv.appendChild(saveBtn);
   optionsDiv.appendChild(deleteBtn);
 
