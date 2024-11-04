@@ -45,17 +45,23 @@ function createProjectContainer(){
   const projecContainer = createDiv('project-container');
   const ul = document.createElement('ul');
 
-  ul.appendChild(createDefaultProject());
+  // ul.appendChild(createDefaultProject());
   projecContainer.appendChild(ul);
 
   return projecContainer;
 }
 
-function createDefaultProject(){
+export function createDefaultProject(newProjectId, newProjectName){
   const defaultProject = document.createElement('li');
+  defaultProject.dataset.projectId = newProjectId;
   defaultProject.classList.add('project');
-  const defaultPara = createPara("project-title", "Default");
+  const defaultPara = createPara("project-title", newProjectName);
   defaultProject.appendChild(defaultPara);
 
   return defaultProject;
+}
+
+export function addProjectToNavInDOM(project){
+  const ul = document.querySelector('.project-container > ul');
+  ul.appendChild(project);
 }

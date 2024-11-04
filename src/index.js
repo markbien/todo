@@ -3,6 +3,7 @@ import initializeWebsiteDom from "./modules/dom/landing-page.js";
 import { createAddProject } from "./modules/dom/div-input.js";
 import createProjectCollection from "./modules/project-collection.js";
 import project from "./modules/project.js";
+import { createDefaultProject, addProjectToNavInDOM } from "./modules/dom/nav.js";
 // import todo from './modules/todo.js';
 // import project from './modules/project.js';
 // import projectCollection from './modules/project-collection.js';
@@ -58,15 +59,7 @@ initializeWebsiteDom();
 
 function initializeStorage(){
   const projectCollection = createProjectCollection();
-  const defaultIndex = projectCollection.findProjectIndex('Default');
-  if (defaultIndex === -1) { // Create "Default" project
-    const defaultProject = project(0, "Default");
-    projectCollection.addProject(defaultProject);
-  }
-
-  
-
-  projectCollection.printProjectDetails();
+  loadDefaultProject(projectCollection);
 
   return projectCollection;
 }
@@ -74,8 +67,22 @@ function initializeStorage(){
 document.addEventListener("DOMContentLoaded", function () {
   addEventListenerToNewProject();
   // Load projects here
-  console.log(initializeStorage());
+  initializeStorage();
 });
+
+function loadDefaultProject(projectCollection){
+  const DEFAULT_PROJECT_INDEX = 0;
+  const defaultIndex = projectCollection.findProjectIndex('Default');
+  if (defaultIndex === -1) { // Create "Default" project
+    const defaultProject = project(DEFAULT_PROJECT_INDEX, "Default");
+    projectCollection.addProject(defaultProject);
+  }
+
+  // Get from storage > Add Default project to DOM
+  const defaultProject = projectCollection.getProject(DEFAULT_PROJECT_INDEX);
+  const defaultProjectDOM = createDefaultProject(defaultProject.getId(), defaultProject.getName());
+  addProjectToNavInDOM(defaultProjectDOM);
+}
 
 function addEventListenerToNewProject() {
   const newProjectBtn = document.querySelector("#new-project");
@@ -111,4 +118,9 @@ function attachEventSaveProject() {
 
     removeAddProjectDiv();
   });
+}
+
+function generateRandomIdFrom1(maxNumber){
+  const randNum = Math.floor(Math.random() * maxNumber) + 1; // +1 to exclude 0 from results
+  return randNum;
 }
