@@ -65,7 +65,7 @@ function attachEventSaveProject() {
   saveBtn.addEventListener("click", function () {
     // Add project here
     const projectName = document.querySelector('#project-name');
-    saveNewProjectToCollection(projectName.value);
+    if (saveNewProjectToCollection(projectName.value) === false) return; // Make sure that ID doesn't already exists
 
     removeAddProjectDiv();
   });
@@ -73,9 +73,17 @@ function attachEventSaveProject() {
 
 function saveNewProjectToCollection(projectName){
   const newId = generateId(projectName);  
+  
+  if (projectCollection.findProjectIndex(newId) !== -1) {
+    alert('Project Name already exists. Choose another name.');
+    return false;
+  }
+
   const newProject = project(newId, projectName);
   projectCollection.addProject(newProject); // Add project to collection
   projectCollection.printProjectDetails();
+  
+  return true;
 }
 
 function generateId(projectName) {
