@@ -4,6 +4,7 @@ import { createAddProject } from "./modules/dom/div-input.js";
 import createProjectCollection from "./modules/project-collection.js";
 import project from "./modules/project.js";
 import { createDefaultProject, addProjectToNavInDOM } from "./modules/dom/nav.js";
+import { createProjectDom } from "./modules/dom/project-dom.js";
 
 initializeWebsiteDom();
 const projectCollection = initializeStorage();
@@ -83,6 +84,8 @@ function saveNewProjectToCollection(projectName){
   projectCollection.addProject(newProject); // Add project to collection
   projectCollection.printProjectDetails();
   
+  addProjectToNavInDOM(createProjectDom(newId, projectName)); // Add project to DOM
+
   return true;
 }
 
