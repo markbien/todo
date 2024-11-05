@@ -2,11 +2,11 @@ export default function projectCollection() {
   const collection = [];
   const addProject = project => collection.push(project);
 
-  const findProjectIndex = projectId => {
+  const findProjectName = projectName => {
     return collection.findIndex(project => {
-      return project.getId() === projectId;
+      return project.getName() === projectName;
     });
-  };
+  }
 
   const removeProject = index => {
     collection.splice(index, 1);
@@ -43,7 +43,7 @@ export default function projectCollection() {
 
   return {
     addProject,
-    findProjectIndex,
+    findProjectName,
     removeProject,
     printProjectDetails,
     mapProjectName,
