@@ -1,9 +1,5 @@
 import project from "./project";
 
-export function getDataFromStorage(){
-
-}
-
 export function importDataFromStorage(storage){
   checkThatStorageExists();
   let projectCollection = JSON.parse(localStorage.getItem('projectCollection'));
@@ -12,7 +8,6 @@ export function importDataFromStorage(storage){
     storage.addProject(project(item.id, item.name));
   });
 
-  console.log(projectCollection);
   return projectCollection;
 }
 
