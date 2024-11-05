@@ -3,7 +3,7 @@ import initializeWebsiteDom from "./modules/dom/landing-page.js";
 import { createAddProject } from "./modules/dom/div-input.js";
 import createProjectCollection from "./modules/project-collection.js";
 import project from "./modules/project.js";
-import { createDefaultProject, addProjectToNavInDOM } from "./modules/dom/nav.js";
+import { createDefaultProject, addProjectToNavInDOM, removeProjectFromNavInDOM } from "./modules/dom/nav.js";
 import { createProjectDom } from "./modules/dom/project-dom.js";
 import { importDataFromStorage, exportDataToStorage } from "./modules/storage.js";
 
@@ -72,7 +72,10 @@ function saveNewProjectToCollection(projectName){
   projectCollection.addProject(newProject); // Add project to collection
   projectCollection.printProjectDetails();
   
-  addProjectToNavInDOM(createProjectDom(newId, projectName)); // Add project to DOM, will still need to add eventlisteners here
+  const newProjectDOM = createProjectDom(newId, projectName)
+  addProjectToNavInDOM(newProjectDOM); // Add project to DOM, will still need to add eventlisteners here
+
+  addEventToDeleteProject(newProjectDOM, newId);
 
   exportDataToStorage(projectCollection);
 
@@ -86,6 +89,20 @@ function generateId(projectName) {
 function loadProjects(projectCollection){
   projectCollection.mapProjectNameAndId().forEach(project => {
     if (project.id === 'default') addProjectToNavInDOM(createDefaultProject(project.id, project.name));
-    else addProjectToNavInDOM(createProjectDom(project.id, project.name));
+    else {
+      const newProjectDOM = createProjectDom(project.id, project.name);
+      addProjectToNavInDOM(newProjectDOM);
+      addEventToDeleteProject(newProjectDOM, project.id)
+    }
+  });
+}
+
+function addEventToDeleteProject(newProjectDOM, newId){
+  const deleteImg = newProjectDOM.lastChild.lastChild;
+  deleteImg.addEventListener('click', function(){
+    const index = projectCollection.findProjectIndex(newId);
+    projectCollection.removeProject(index);
+    exportDataToStorage(projectCollection);
+    removeProjectFromNavInDOM(newProjectDOM);
   });
 }
