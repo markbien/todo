@@ -65,3 +65,8 @@ export function addProjectToNavInDOM(project){
   const ul = document.querySelector('.project-container > ul');
   ul.appendChild(project);
 }
+
+export function removeProjectFromNavInDOM(project) {
+  const ul = document.querySelector('.project-container > ul');
+  ul.removeChild(project);
+}
