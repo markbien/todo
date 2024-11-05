@@ -5,34 +5,22 @@ import createProjectCollection from "./modules/project-collection.js";
 import project from "./modules/project.js";
 import { createDefaultProject, addProjectToNavInDOM } from "./modules/dom/nav.js";
 import { createProjectDom } from "./modules/dom/project-dom.js";
+import { importDataFromStorage, exportDataToStorage } from "./modules/storage.js";
 
 initializeWebsiteDom();
 const projectCollection = initializeStorage();
 
-loadDefaultProject(projectCollection) // Load default project here
+loadProjects(projectCollection);
 
 function initializeStorage(){
-  // this is where we can load from JSON later
-  return createProjectCollection();
+  const newProjectCollection = createProjectCollection();
+  importDataFromStorage(newProjectCollection);
+  return newProjectCollection;
 }
 
 document.addEventListener("DOMContentLoaded", function () {
   addEventListenerToNewProject();
 });
-
-function loadDefaultProject(projectCollection){
-  let defaultIndex = projectCollection.findProjectIndex('default');
-  if (defaultIndex === -1) { // Create "Default" project
-    const defaultProject = project(generateId("Default"), "Default");
-    projectCollection.addProject(defaultProject);
-    defaultIndex = projectCollection.findProjectIndex('default');
-  }
-
-  // Get from storage > Add Default project to DOM
-  const defaultProject = projectCollection.getProject(defaultIndex);
-  const defaultProjectDOM = createDefaultProject(defaultProject.getId(), defaultProject.getName());
-  addProjectToNavInDOM(defaultProjectDOM);
-}
 
 function addEventListenerToNewProject() {
   const newProjectBtn = document.querySelector("#new-project");
@@ -84,11 +72,20 @@ function saveNewProjectToCollection(projectName){
   projectCollection.addProject(newProject); // Add project to collection
   projectCollection.printProjectDetails();
   
-  addProjectToNavInDOM(createProjectDom(newId, projectName)); // Add project to DOM
+  addProjectToNavInDOM(createProjectDom(newId, projectName)); // Add project to DOM, will still need to add eventlisteners here
+
+  exportDataToStorage(projectCollection);
 
   return true;
 }
 
 function generateId(projectName) {
   return projectName.replaceAll(' ', '').toLowerCase();
+}
+
+function loadProjects(projectCollection){
+  projectCollection.mapProjectNameAndId().forEach(project => {
+    if (project.id === 'default') addProjectToNavInDOM(createDefaultProject(project.id, project.name));
+    else addProjectToNavInDOM(createProjectDom(project.id, project.name));
+  });
 }
