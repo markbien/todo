@@ -24,9 +24,22 @@ export default function projectCollection() {
     });
   }
 
+  const mapProjectNameAndId = () => {
+    return collection.map(project => {      
+      return {
+        id: project.getId(),
+        name: project.getName(),
+      };
+    });
+  };
+
   const getProject = index => {
     return collection[index];
   };
+
+  const convertToJSON = () => {
+    return JSON.stringify(mapProjectNameAndId());
+  }
 
   return {
     addProject,
@@ -35,5 +48,7 @@ export default function projectCollection() {
     printProjectDetails,
     mapProjectName,
     getProject,
+    convertToJSON,
+    mapProjectNameAndId
   }
 };
