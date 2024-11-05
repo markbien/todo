@@ -235,13 +235,24 @@ nav {
   color: var(--text-fade);
 }
 
-.add-project {
+.add-project,
+.edit-project {
   background-color: var(--accent);
   border-radius: 8px;
   padding: 5px;
   display: flex;
   flex-direction: column;
   gap: 5px;
+}
+
+.edit-project {
+  color: var(--secondary-color);
+  padding: 1rem .5rem;
+  font-size: 1.1rem;
+}
+
+.edit-project input {
+  border-radius: 5px;
 }
 
 #project-name {
@@ -254,7 +265,8 @@ nav {
   text-align: center;
 }
 
-.add-project img {
+.add-project img,
+.edit-project img {
   height: 20px;
   width: auto;
   padding: 0 5px;
