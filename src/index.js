@@ -3,16 +3,23 @@ import initializeWebsiteDom from "./modules/dom/landing-page.js";
 import { createAddProject } from "./modules/dom/div-input.js";
 import createProjectCollection from "./modules/project-collection.js";
 import project from "./modules/project.js";
-import { createDefaultProject, addProjectToNavInDOM, removeProjectFromNavInDOM } from "./modules/dom/nav.js";
-import { createProjectDom } from "./modules/dom/project-dom.js";
-import { importDataFromStorage, exportDataToStorage } from "./modules/storage.js";
+import {
+  createDefaultProject,
+  addProjectToNavInDOM,
+  removeProjectFromNavInDOM,
+} from "./modules/dom/nav.js";
+import { createProjectDom, editProjectDom } from "./modules/dom/project-dom.js";
+import {
+  importDataFromStorage,
+  exportDataToStorage,
+} from "./modules/storage.js";
 
 initializeWebsiteDom();
 const projectCollection = initializeStorage();
 
 loadProjects(projectCollection);
 
-function initializeStorage(){
+function initializeStorage() {
   const newProjectCollection = createProjectCollection();
   importDataFromStorage(newProjectCollection);
   return newProjectCollection;
@@ -53,29 +60,35 @@ function attachEventSaveProject() {
   const saveBtn = document.querySelector("#save-new-project");
   saveBtn.addEventListener("click", function () {
     // Add project here
-    const projectName = document.querySelector('#project-name');
+    const projectName = document.querySelector("#project-name");
     if (saveNewProjectToCollection(projectName.value) === false) return; // Make sure that ID doesn't already exists
 
     removeAddProjectDiv();
   });
 }
 
-function saveNewProjectToCollection(projectName){
-  const newId = generateId(projectName);  
-  
-  if (projectCollection.findProjectIndex(newId) !== -1) {
-    alert('Project Name already exists. Choose another name.');
-    return false;
+function showProjectNameAlreadyExists(newName) {
+  if (projectCollection.findProjectName(newName) !== -1) {
+    alert("Project name already exists. Choose another name.");
+    return true;
   }
+  return false;
+}
+
+function saveNewProjectToCollection(projectName) {
+  const newId = generateId(projectName);
+
+  if (showProjectNameAlreadyExists(projectName) === true) return false;
 
   const newProject = project(newId, projectName);
   projectCollection.addProject(newProject); // Add project to collection
   projectCollection.printProjectDetails();
-  
-  const newProjectDOM = createProjectDom(newId, projectName)
+
+  const newProjectDOM = createProjectDom(newId, projectName);
   addProjectToNavInDOM(newProjectDOM); // Add project to DOM, will still need to add eventlisteners here
 
   addEventToDeleteProject(newProjectDOM, newId);
+  addEventToEditProject(newProjectDOM);
 
   exportDataToStorage(projectCollection);
 
@@ -83,26 +96,82 @@ function saveNewProjectToCollection(projectName){
 }
 
 function generateId(projectName) {
-  return projectName.replaceAll(' ', '').toLowerCase();
+  return projectName.replaceAll(" ", "").toLowerCase();
 }
 
-function loadProjects(projectCollection){
-  projectCollection.mapProjectNameAndId().forEach(project => {
-    if (project.id === 'default') addProjectToNavInDOM(createDefaultProject(project.id, project.name));
+function loadProjects(projectCollection) {
+  projectCollection.mapProjectNameAndId().forEach((project) => {
+    if (project.id === "default")
+      addProjectToNavInDOM(createDefaultProject(project.id, project.name));
     else {
       const newProjectDOM = createProjectDom(project.id, project.name);
       addProjectToNavInDOM(newProjectDOM);
-      addEventToDeleteProject(newProjectDOM, project.id)
+      addEventToDeleteProject(newProjectDOM, project.id);
+      addEventToEditProject(newProjectDOM);
     }
   });
 }
 
-function addEventToDeleteProject(newProjectDOM, newId){
+function addEventToDeleteProject(newProjectDOM, newId) {
   const deleteImg = newProjectDOM.lastChild.lastChild;
-  deleteImg.addEventListener('click', function(){
+  deleteImg.addEventListener("click", function () {
     const index = projectCollection.findProjectIndex(newId);
     projectCollection.removeProject(index);
     exportDataToStorage(projectCollection);
     removeProjectFromNavInDOM(newProjectDOM);
+  });
+}
+
+function addEventToEditProject(newProjectDOM) {
+  const editImg = newProjectDOM.lastChild.firstChild;
+  const projectId = newProjectDOM.dataset.projectId;
+  const projectName = newProjectDOM.firstChild.textContent;
+
+  editImg.addEventListener("click", function () {
+    const editCurrentProjectDOM = editProjectDom(projectName, projectId);
+    newProjectDOM.replaceWith(editCurrentProjectDOM);
+    addEventToCloseTheEditProject(editCurrentProjectDOM, newProjectDOM);
+    addEventToSaveChangesAndCloseTheEditProject(editCurrentProjectDOM);
+  });
+}
+
+function addEventToCloseTheEditProject(editCurrentProjectDOM, newProjectDOM) {
+  const closeBtn = editCurrentProjectDOM.lastChild.lastChild;
+  closeBtn.addEventListener("click", function () {
+    editCurrentProjectDOM.replaceWith(newProjectDOM);
+  });
+}
+
+function addEventToSaveChangesAndCloseTheEditProject(editCurrentProjectDOM) {
+  const saveBtn = editCurrentProjectDOM.lastChild.firstChild;
+  // const oldName = document.querySelector("p.project-title > span").textContent;
+  const oldId = editCurrentProjectDOM.dataset.projectId;
+
+  saveBtn.addEventListener("click", function () {
+    const inputText = editCurrentProjectDOM.childNodes[1];
+    // const newId = generateId(inputText.value);
+    if (inputText.value === "") {
+      alert("Please enter a valid project name.");
+      return;
+    }
+    if (showProjectNameAlreadyExists(inputText.value)) return;
+
+    const currentProject = projectCollection.getProject(
+      projectCollection.findProjectIndex(oldId)
+    );
+
+    currentProject.setName(inputText.value);
+
+    const newProjectDOM = createProjectDom(oldId, inputText.value);
+    addProjectToNavInDOM(newProjectDOM);
+    addEventToEditProject(newProjectDOM);
+    addEventToDeleteProject(newProjectDOM, oldId);
+
+    const parentContainer = editCurrentProjectDOM.parentElement;
+    parentContainer.removeChild(editCurrentProjectDOM);
+
+    projectCollection.printProjectDetails();
+
+    exportDataToStorage(projectCollection);
   });
 }
