@@ -2,7 +2,7 @@ export default function projectCollection() {
   const collection = [];
   const addProject = project => collection.push(project);
 
-  const findProjectId = projectId => {
+  const findProjectIndex = projectId => {
     return collection.findIndex(project => {
       return project.getId() === projectId;
     });
@@ -49,7 +49,7 @@ export default function projectCollection() {
 
   return {
     addProject,
-    findProjectId,
+    findProjectIndex,
     findProjectName,
     removeProject,
     printProjectDetails,
