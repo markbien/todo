@@ -39,6 +39,7 @@ function addEventListenerToNewProject() {
 
     attachEventRemoveDiv();
     attachEventSaveProject();
+    console.log("test");
   });
 }
 
@@ -101,15 +102,35 @@ function generateId(projectName) {
 
 function loadProjects(projectCollection) {
   projectCollection.mapProjectNameAndId().forEach((project) => {
-    if (project.id === "default")
-      addProjectToNavInDOM(createDefaultProject(project.id, project.name));
+    if (project.id === "default"){
+      const defaultProject = createDefaultProject(project.id, project.name)
+      addProjectToNavInDOM(defaultProject);
+      defaultProject.addEventListener('click', function(){
+        loadTodos(project.id, this);
+      });
+    }
     else {
       const newProjectDOM = createProjectDom(project.id, project.name);
       addProjectToNavInDOM(newProjectDOM);
       addEventToDeleteProject(newProjectDOM, project.id);
       addEventToEditProject(newProjectDOM);
+
+      newProjectDOM.addEventListener('click', function(){
+        loadTodos(project.id,this);
+      });
     }
   });
+}
+
+function loadTodos(projectId, currentDomSelected){
+  const projectContainer = document.querySelector('.project-container');
+  projectContainer.dataset.activeProject = projectId;
+
+  const projects = projectContainer.firstChild.childNodes;
+  projects.forEach(project => {
+    project.classList.remove('active');
+  });
+  currentDomSelected.classList.add('active');
 }
 
 function addEventToDeleteProject(newProjectDOM, newId) {
@@ -175,3 +196,9 @@ function addEventToSaveChangesAndCloseTheEditProject(editCurrentProjectDOM) {
     exportDataToStorage(projectCollection);
   });
 }
+
+const addTodoBtn = document.querySelector('#add-todo');
+addTodoBtn.addEventListener('click', function(){
+  const currentProjectSelected = document.querySelector('.project-container');
+  console.log(currentProjectSelected.dataset.activeProject);
+});

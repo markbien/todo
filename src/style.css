@@ -313,3 +313,12 @@ nav {
 .completed {
   text-decoration: line-through;
 }
+
+.active {
+  background-color: var(--accent);
+  color: black;
+  opacity: 1;
+  cursor: pointer;
+  border-radius: .5rem;
+  font-weight: 500;
+}
