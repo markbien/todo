@@ -56,7 +56,7 @@ function createProjectContainer(){
 export function createDefaultProject(newProjectId, newProjectName){
   const defaultProject = document.createElement('li');
   defaultProject.dataset.projectId = newProjectId;
-  defaultProject.classList.add('project');
+  defaultProject.classList.add('project', 'active');
   const defaultPara = createPara("project-title", newProjectName);
   defaultProject.appendChild(defaultPara);
 
