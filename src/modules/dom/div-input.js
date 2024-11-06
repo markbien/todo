@@ -55,6 +55,9 @@ function createDivInputRadio(){
 
 export function createAddDetails(){
   const divAddDetails = createDiv('add-details');
+  const img = document.createElement('img');
+  img.setAttribute('id', 'close-window');
+  img.src = removeIcon;
 
   const form = document.createElement('form');
   form.setAttribute('action', '#');
@@ -70,7 +73,12 @@ export function createAddDetails(){
   form.appendChild(divDueDate);
   form.appendChild(inputSubmit);
 
+  divAddDetails.appendChild(img);
   divAddDetails.appendChild(form);
+
+  img.addEventListener('click', function(){
+    this.parentElement.parentElement.removeChild(divAddDetails)
+  });
 
   return divAddDetails;
 }
