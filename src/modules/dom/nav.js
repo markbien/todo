@@ -1,5 +1,6 @@
 import { createDiv, createPara } from "./dom-elements";
 import logoIcon from '../../images/checklist.png';
+import project from "../project";
 
 export default function createNav(){
   const nav = document.createElement('nav');
@@ -42,13 +43,14 @@ function createNewProjectBtn() {
 }
 
 function createProjectContainer(){
-  const projecContainer = createDiv('project-container');
+  const projectContainer = createDiv('project-container')
+  projectContainer.dataset.activeProject = 'default';
   const ul = document.createElement('ul');
 
   // ul.appendChild(createDefaultProject());
-  projecContainer.appendChild(ul);
+  projectContainer.appendChild(ul);
 
-  return projecContainer;
+  return projectContainer;
 }
 
 export function createDefaultProject(newProjectId, newProjectName){
