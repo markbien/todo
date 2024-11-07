@@ -1,6 +1,6 @@
 import "./style.css";
 import initializeWebsiteDom from "./modules/dom/landing-page.js";
-import { createAddProject } from "./modules/dom/div-input.js";
+import { createAddProject, createAddDetails } from "./modules/dom/div-input.js";
 import createProjectCollection from "./modules/project-collection.js";
 import project from "./modules/project.js";
 import {
@@ -13,6 +13,8 @@ import {
   importDataFromStorage,
   exportDataToStorage,
 } from "./modules/storage.js";
+import todo from "./modules/todo.js";
+import {createCard} from './modules/dom/main-div.js';
 
 initializeWebsiteDom();
 const projectCollection = initializeStorage();
@@ -39,7 +41,6 @@ function addEventListenerToNewProject() {
 
     attachEventRemoveDiv();
     attachEventSaveProject();
-    console.log("test");
   });
 }
 
@@ -91,6 +92,10 @@ function saveNewProjectToCollection(projectName) {
   addEventToDeleteProject(newProjectDOM, newId);
   addEventToEditProject(newProjectDOM);
 
+  newProjectDOM.addEventListener("click", function () {
+    loadTodos(newId, this);
+  });
+
   exportDataToStorage(projectCollection);
 
   return true;
@@ -102,35 +107,56 @@ function generateId(projectName) {
 
 function loadProjects(projectCollection) {
   projectCollection.mapProjectNameAndId().forEach((project) => {
-    if (project.id === "default"){
-      const defaultProject = createDefaultProject(project.id, project.name)
+    if (project.id === "default") {
+      const defaultProject = createDefaultProject(project.id, project.name);
       addProjectToNavInDOM(defaultProject);
-      defaultProject.addEventListener('click', function(){
+      defaultProject.addEventListener("click", function () {
         loadTodos(project.id, this);
       });
-    }
-    else {
+    } else {
       const newProjectDOM = createProjectDom(project.id, project.name);
       addProjectToNavInDOM(newProjectDOM);
       addEventToDeleteProject(newProjectDOM, project.id);
       addEventToEditProject(newProjectDOM);
 
-      newProjectDOM.addEventListener('click', function(){
-        loadTodos(project.id,this);
+      newProjectDOM.addEventListener("click", function () {
+        loadTodos(project.id, this);
       });
     }
   });
 }
 
-function loadTodos(projectId, currentDomSelected){
-  const projectContainer = document.querySelector('.project-container');
+function loadTodos(projectId, currentDomSelected) {
+  const projectContainer = document.querySelector(".project-container");
   projectContainer.dataset.activeProject = projectId;
 
   const projects = projectContainer.firstChild.childNodes;
-  projects.forEach(project => {
-    project.classList.remove('active');
+  projects.forEach((project) => {
+    project.classList.remove("active");
   });
-  currentDomSelected.classList.add('active');
+  currentDomSelected.classList.add("active");
+
+
+  clearCardContainer();
+
+  const projectIndex = projectCollection.findProjectIndex(projectId);
+  const todoArr = projectCollection.getProject(projectIndex).getTodos();
+  todoArr.forEach(todo => {
+    const newCard = createCard(todo.id, todo.title, todo.description, todo.dueDate);
+    const cardContainer = document.querySelector('.card-container');
+    cardContainer.appendChild(newCard);
+
+    const deleteImg = newCard.lastChild.lastChild
+    addEventToDeleteATodo(deleteImg, projectIndex, todo.id, cardContainer, newCard);
+  });
+}
+
+function addEventToDeleteATodo(img, projectIndex, todoId, cardContainer, newCard){
+  img.addEventListener('click', function(){
+    const currentTodoIndex = projectCollection.getProject(projectIndex).getTodoIndexById(todoId);
+    projectCollection.getProject(projectIndex).removeATodo(currentTodoIndex);
+    cardContainer.removeChild(newCard);
+  });
 }
 
 function addEventToDeleteProject(newProjectDOM, newId) {
@@ -188,6 +214,10 @@ function addEventToSaveChangesAndCloseTheEditProject(editCurrentProjectDOM) {
     addEventToEditProject(newProjectDOM);
     addEventToDeleteProject(newProjectDOM, oldId);
 
+    newProjectDOM.addEventListener("click", function () {
+      loadTodos(oldId, this);
+    });
+
     const parentContainer = editCurrentProjectDOM.parentElement;
     parentContainer.removeChild(editCurrentProjectDOM);
 
@@ -197,8 +227,53 @@ function addEventToSaveChangesAndCloseTheEditProject(editCurrentProjectDOM) {
   });
 }
 
-const addTodoBtn = document.querySelector('#add-todo');
-addTodoBtn.addEventListener('click', function(){
-  const currentProjectSelected = document.querySelector('.project-container');
-  console.log(currentProjectSelected.dataset.activeProject);
+const addTodoBtn = document.querySelector("#add-todo");
+addTodoBtn.addEventListener("click", function () {
+  if (document.body.lastChild.classList.contains("add-details") === true)
+    return; // Prevent duplicate add todo window
+
+  const currentProjectSelectedDOM =
+    document.querySelector(".project-container");
+  const currentProjectId = currentProjectSelectedDOM.dataset.activeProject;
+  const currentProjectIndex =
+    projectCollection.findProjectIndex(currentProjectId);
+
+  const addTodoWindow = createAddDetails();
+  document.body.appendChild(addTodoWindow);
+
+  const addTodoBtn = addTodoWindow.lastChild.lastChild;
+  addTodoBtn.addEventListener("click", function () {
+    const title = document.querySelector('#title').value
+    const id = generateId(title);
+    const description = document.querySelector('#description').value;
+    const dueDate = document.querySelector('#due-date').value;
+
+    // Make control statement to ensure that all fields are completed
+
+    const newTodo = todo(id, title, description, dueDate);
+    
+    projectCollection.getProject(currentProjectIndex).addATodo(newTodo);
+    
+    // load todo in page
+    const cardContainer = document.querySelector('.card-container');
+    const newCard = createCard(newTodo.getId(), newTodo.getTitle(), newTodo.getDescription(), newTodo.getDueDate())
+    cardContainer.appendChild(newCard);
+
+    const deleteImg = newCard.lastChild.lastChild;
+    const projectIndex = projectCollection.findProjectIndex(currentProjectId);
+    
+    addEventToDeleteATodo(deleteImg, projectIndex, id, cardContainer, newCard);
+
+    document.body.removeChild(addTodoWindow);
+  });
 });
+
+document.querySelector('.logo').addEventListener('click', function(){
+  // projectCollection.getProject(0).printTodos();
+  console.log(projectCollection.getProject(0).getTodos());
+});
+
+function clearCardContainer(){
+  const cardContainer = document.querySelector('.card-container');
+  cardContainer.textContent = '';
+}
