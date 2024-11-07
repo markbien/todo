@@ -80,6 +80,10 @@ export function createAddDetails(){
     this.parentElement.parentElement.removeChild(divAddDetails)
   });
 
+  inputSubmit.addEventListener('click', e => {
+    e.preventDefault();
+  })
+
   return divAddDetails;
 }
 
