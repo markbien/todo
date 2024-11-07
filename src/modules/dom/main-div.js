@@ -69,9 +69,10 @@ function createMainContainer(){
   return mainContainerDiv;
 }
 
-export function createCard(newId, newTitle, newDescription, newDueDate){
+export function createCard(newId, newTitle, newDescription, newDueDate, completionStatus){
   const card = createLi('card');
   card.dataset.todoId = newId;
+  card.dataset.completionStatus = completionStatus;
 
   const leftDiv = createDiv('left');
   const todoDetailsDiv = createDiv('todo-details');

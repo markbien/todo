@@ -34,6 +34,7 @@ export default function project(id, name){
         title: todo.getTitle(),
         description: todo.getDescription(),
         dueDate: todo.getDueDate(),
+        completionStatus: todo.getStatus(),
       };
     });
   };
