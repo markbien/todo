@@ -10,6 +10,11 @@ export default function project(id, name){
       return todo.getId() === id;
     });
   };
+  const getTodoIndexById = todoId => {
+    return listOfTodos.findIndex(todo => {
+      return todo.getId() === todoId;
+    });
+  };
   const removeATodo = index => {
     listOfTodos.splice(index, 1);
   };
@@ -22,6 +27,17 @@ export default function project(id, name){
     console.log(`ID: ${getId()}\nName: ${getName()}`);
   };
 
+  const getTodos = () => {
+    return listOfTodos.map(todo => {
+      return {
+        id: todo.getId(),
+        title: todo.getTitle(),
+        description: todo.getDescription(),
+        dueDate: todo.getDueDate(),
+      };
+    });
+  };
+
   return {
     getId,
     getName,
@@ -30,6 +46,8 @@ export default function project(id, name){
     getTodoIndex,
     removeATodo,
     printTodos,
-    printDetails
+    printDetails,
+    getTodos,
+    getTodoIndexById
   }
 }
