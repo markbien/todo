@@ -3,7 +3,7 @@ export default function todo(id, title, description, dueDate){
   const getTitle = ()=> title;
   const getDescription = ()=> description;
   const getDueDate = ()=> dueDate;
-  isCompleted = false;
+  let isCompleted = false;
   const getStatus = () => isCompleted;
   
   const setTitle = newTitle => title = newTitle;
