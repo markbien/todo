@@ -39,6 +39,12 @@ export default function project(id, name){
     });
   };
 
+  const getTodo = (todoId) => {
+    return listOfTodos.find(todo => {
+      return todo.getId() === todoId;
+    })
+  };
+
   return {
     getId,
     getName,
@@ -49,6 +55,7 @@ export default function project(id, name){
     printTodos,
     printDetails,
     getTodos,
-    getTodoIndexById
+    getTodoIndexById,
+    getTodo
   }
 }
