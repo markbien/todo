@@ -82,9 +82,14 @@ function showProjectNameAlreadyExists(newName) {
 }
 
 function saveNewProjectToCollection(projectName) {
+  projectName = projectName.trim();
   const newId = generateId(projectName);
 
   if (showProjectNameAlreadyExists(projectName) === true) return false;
+  if (projectName === '') {
+    alert('Please enter a valid project name.');
+    return false;
+  }
 
   const newProject = project(newId, projectName);
   projectCollection.addProject(newProject); // Add project to collection
@@ -334,7 +339,7 @@ function addEventToSaveChangesAndCloseTheEditProject(editCurrentProjectDOM) {
   saveBtn.addEventListener("click", function () {
     const inputText = editCurrentProjectDOM.childNodes[1];
     // const newId = generateId(inputText.value);
-    if (inputText.value === "") {
+    if (inputText.value.trim() === "") {
       alert("Please enter a valid project name.");
       return;
     }
@@ -344,9 +349,9 @@ function addEventToSaveChangesAndCloseTheEditProject(editCurrentProjectDOM) {
       projectCollection.findProjectIndex(oldId)
     );
 
-    currentProject.setName(inputText.value);
+    currentProject.setName(inputText.value.trim());
 
-    const newProjectDOM = createProjectDom(oldId, inputText.value);
+    const newProjectDOM = createProjectDom(oldId, inputText.value.trim());
     addProjectToNavInDOM(newProjectDOM);
     addEventToEditProject(newProjectDOM);
     addEventToDeleteProject(newProjectDOM, oldId);
