@@ -85,6 +85,12 @@ export function createCard(newId, newTitle, newDescription, newDueDate, completi
   todoDetailsDiv.appendChild(description);
   todoDetailsDiv.appendChild(dueDate);
 
+  if (completionStatus === true) {
+    title.classList.add('completed');
+    description.classList.add('completed');
+    dueDate.classList.add('completed');
+  }
+
   const rightDiv = createDiv('right');
   const edit = document.createElement('img');
   edit.src = editIcon;
