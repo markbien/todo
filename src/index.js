@@ -439,11 +439,6 @@ addTodoBtn.addEventListener("click", function () {
   });
 });
 
-document.querySelector(".logo").addEventListener("click", function () {
-  // console.log(projectCollection.getProject(0).getTodos());
-  console.log(projectCollection.printAll());
-});
-
 function clearCardContainer() {
   const cardContainer = document.querySelector(".card-container");
   cardContainer.textContent = "";
