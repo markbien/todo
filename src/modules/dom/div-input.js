@@ -111,3 +111,48 @@ export function createAddProject(){
 
   return li;
 }
+
+export function createEditDetails(currentTitle, currentDescription, currentDueDate, currentStatus){
+  const divAddDetails = createDiv('add-details');
+  const img = document.createElement('img');
+  img.setAttribute('id', 'close-window');
+  img.src = removeIcon;
+
+  const form = document.createElement('form');
+  form.setAttribute('action', '#');
+  form.setAttribute('data-to-do-id','Test ID');
+
+  const divTitle = createDivInputText('title', 'Current Title', 'title', `Enter a new title...`);
+  divTitle.lastChild.value = currentTitle;
+  const divDescription = createDivTextArea();
+  divDescription.lastChild.value = currentDescription;
+  const divDueDate = createDivInputDate('due-date', 'Due Date', 'due-date');
+  divDueDate.lastChild.value = currentDueDate;
+  const divIsCompleted = createDivInputRadio();
+  const inputSubmit = createInputSubmit('add-todo-btn', 'Save Changes');
+
+  if (currentStatus === true) {
+    divIsCompleted.childNodes[1].checked = true;
+  } else {
+    divIsCompleted.childNodes[3].checked = true;
+  }
+
+  form.appendChild(divTitle);
+  form.appendChild(divDescription);
+  form.appendChild(divDueDate);
+  form.appendChild(divIsCompleted);
+  form.appendChild(inputSubmit);
+
+  divAddDetails.appendChild(img);
+  divAddDetails.appendChild(form);
+
+  img.addEventListener('click', function(){
+    this.parentElement.parentElement.removeChild(divAddDetails)
+  });
+
+  inputSubmit.addEventListener('click', e => {
+    e.preventDefault();
+  })
+
+  return divAddDetails;
+}
