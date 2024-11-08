@@ -260,13 +260,21 @@ function addEventToEditATodo(
     saveChangesBtn.addEventListener("click", () => {
       const todo = img.parentElement.parentElement;
       const todoId = todo.dataset.todoId;
-      const newTitle = editDetails.lastChild.childNodes[0].lastChild.value;
-      const newDescription =
+      let newTitle = editDetails.lastChild.childNodes[0].lastChild.value;
+      let newDescription =
         editDetails.lastChild.childNodes[1].lastChild.value;
       const newDueDate = editDetails.lastChild.childNodes[2].lastChild.value;
       const newStatus = document
         .querySelector('input[name="status"]:checked')
         .getAttribute("id");
+
+      newTitle = newTitle.trim();
+      newDescription = newDescription.trim();
+
+      if (newTitle === '' || newDescription === '') {
+        alert('Please ensure that all fields have a value.');
+        return;
+      }
 
       const projectId =
         document.querySelector(".project-container").dataset.activeProject;
@@ -281,7 +289,7 @@ function addEventToEditATodo(
 
       todo.firstChild.firstChild.childNodes[0].textContent = newTitle;
       todo.firstChild.firstChild.childNodes[1].textContent = newDescription;
-      todo.firstChild.firstChild.childNodes[2].textContent = newDueDate;
+      todo.firstChild.firstChild.childNodes[2].textContent = `Due: ${newDueDate}`;
       todo.dataset.completionStatus = newStatus;
 
       if (newStatus === "true") {
@@ -385,12 +393,23 @@ addTodoBtn.addEventListener("click", function () {
 
   const addTodoBtn = addTodoWindow.lastChild.lastChild;
   addTodoBtn.addEventListener("click", function () {
-    const title = document.querySelector("#title").value;
-    const id = generateId(title);
-    const description = document.querySelector("#description").value;
+    let title = document.querySelector("#title").value;
+    title = title.trim();
+
+    let id = generateId(title);
+    id = id.trim();
+
+    let description = document.querySelector("#description").value;
+    description = description.trim();
+
     const dueDate = document.querySelector("#due-date").value;
 
+
     // Make control statement to ensure that all fields are completed
+    if (title === '' || description === '' || dueDate === '') {
+      alert('Please make sure that all fields have value.');
+      return;
+    }
 
     const newTodo = todo(id, title, description, dueDate);
 
