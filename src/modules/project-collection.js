@@ -44,7 +44,17 @@ export default function projectCollection() {
   };
 
   const convertToJSON = () => {
-    return JSON.stringify(mapProjectNameAndId());
+    return JSON.stringify(printAll());
+  }
+
+  const printAll = () => {
+    return collection.map(project => {
+      return {
+        id: project.getId(),
+        name: project.getName(),
+        todos: project.getTodos(),
+      }
+    })
   }
 
   return {
@@ -56,6 +66,7 @@ export default function projectCollection() {
     mapProjectName,
     getProject,
     convertToJSON,
-    mapProjectNameAndId
+    mapProjectNameAndId,
+    printAll
   }
 };
