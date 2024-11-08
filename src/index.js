@@ -1,6 +1,6 @@
 import "./style.css";
 import initializeWebsiteDom from "./modules/dom/landing-page.js";
-import { createAddProject, createAddDetails } from "./modules/dom/div-input.js";
+import { createAddProject, createAddDetails, createEditDetails } from "./modules/dom/div-input.js";
 import createProjectCollection from "./modules/project-collection.js";
 import project from "./modules/project.js";
 import {
@@ -142,12 +142,22 @@ function loadTodos(projectId, currentDomSelected) {
   const projectIndex = projectCollection.findProjectIndex(projectId);
   const todoArr = projectCollection.getProject(projectIndex).getTodos();
   todoArr.forEach(todo => {
-    const newCard = createCard(todo.id, todo.title, todo.description, todo.dueDate);
+    const newCard = createCard(todo.id, todo.title, todo.description, todo.dueDate, todo.completionStatus);
+    if (todo.completionStatus === 'true') {
+      const todoDom = newCard.firstChild.firstChild;
+      todoDom.childNodes[0].classList.add('completed');
+      todoDom.childNodes[1].classList.add('completed');
+      todoDom.childNodes[2].classList.add('completed');
+    }
+
     const cardContainer = document.querySelector('.card-container');
     cardContainer.appendChild(newCard);
 
     const deleteImg = newCard.lastChild.lastChild
     addEventToDeleteATodo(deleteImg, projectIndex, todo.id, cardContainer, newCard);
+
+    const editImg = newCard.lastChild.firstChild;
+    addEventToEditATodo(editImg, todo.title, todo.description, todo.dueDate, todo.completionStatus);
   });
 }
 
@@ -159,9 +169,58 @@ function addEventToDeleteATodo(img, projectIndex, todoId, cardContainer, newCard
   });
 }
 
+function addEventToEditATodo(img, currentTitle, currentDescription, currentDueDate, currentStatus){
+  img.addEventListener('click', function(){
+    if (document.body.lastChild.classList.contains('add-details')) return; // Ensure no duplicate edit window appears
+    const editDetails = createEditDetails(currentTitle, currentDescription, currentDueDate, currentStatus);
+    const todoFromStorageCompletionStatus = img.parentElement.parentElement.dataset.completionStatus;
+    if (todoFromStorageCompletionStatus === 'true') {
+      editDetails.lastChild.childNodes[3].childNodes[1].checked = true;
+    }
+
+    document.body.appendChild(editDetails);
+
+    const saveChangesBtn = editDetails.lastChild.lastChild;
+    saveChangesBtn.addEventListener('click', ()=> {
+      const todo = img.parentElement.parentElement;
+      const todoId = todo.dataset.todoId;
+      const newTitle = editDetails.lastChild.childNodes[0].lastChild.value;
+      const newDescription = editDetails.lastChild.childNodes[1].lastChild.value;
+      const newDueDate = editDetails.lastChild.childNodes[2].lastChild.value;
+      const newStatus = document.querySelector('input[name="status"]:checked').getAttribute('id');
+
+      const projectId = document.querySelector('.project-container').dataset.activeProject;
+      const projectIndex = projectCollection.findProjectIndex(projectId);
+      const currentTodo = projectCollection.getProject(projectIndex).getTodo(todoId);
+      currentTodo.setTitle(newTitle);
+      currentTodo.setDescription(newDescription);
+      currentTodo.setDueDate(newDueDate);
+      currentTodo.setStatus(newStatus);
+      
+      todo.firstChild.firstChild.childNodes[0].textContent = newTitle;
+      todo.firstChild.firstChild.childNodes[1].textContent = newDescription;
+      todo.firstChild.firstChild.childNodes[2].textContent = newDueDate;
+      todo.dataset.completionStatus = newStatus;
+      
+      if (newStatus === 'true') {
+        todo.firstChild.firstChild.childNodes[0].classList.add('completed');
+        todo.firstChild.firstChild.childNodes[1].classList.add('completed');
+        todo.firstChild.firstChild.childNodes[2].classList.add('completed');
+      } else {
+        todo.firstChild.firstChild.childNodes[0].classList.remove('completed');
+        todo.firstChild.firstChild.childNodes[1].classList.remove('completed');
+        todo.firstChild.firstChild.childNodes[2].classList.remove('completed');
+      }
+
+      document.body.removeChild(editDetails);
+    });
+  });
+}
+
 function addEventToDeleteProject(newProjectDOM, newId) {
   const deleteImg = newProjectDOM.lastChild.lastChild;
-  deleteImg.addEventListener("click", function () {
+  deleteImg.addEventListener("click", function (e) {
+    e.stopPropagation();
     const index = projectCollection.findProjectIndex(newId);
     projectCollection.removeProject(index);
     exportDataToStorage(projectCollection);
@@ -256,13 +315,15 @@ addTodoBtn.addEventListener("click", function () {
     
     // load todo in page
     const cardContainer = document.querySelector('.card-container');
-    const newCard = createCard(newTodo.getId(), newTodo.getTitle(), newTodo.getDescription(), newTodo.getDueDate())
+    const newCard = createCard(newTodo.getId(), newTodo.getTitle(), newTodo.getDescription(), newTodo.getDueDate(), false);
     cardContainer.appendChild(newCard);
 
     const deleteImg = newCard.lastChild.lastChild;
+    const editImg = newCard.lastChild.firstChild;
     const projectIndex = projectCollection.findProjectIndex(currentProjectId);
     
     addEventToDeleteATodo(deleteImg, projectIndex, id, cardContainer, newCard);
+    addEventToEditATodo(editImg, title, description, dueDate, false);
 
     document.body.removeChild(addTodoWindow);
   });
